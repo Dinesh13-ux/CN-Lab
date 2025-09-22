@@ -3,9 +3,9 @@
 #include <time.h>
 #include <unistd.h>
 
-#define TOTAL_FRAMES 10 
-#define WINDOW_SIZE 4    
-#define LOSS_PROB 30 
+#define TOTAL_FRAMES 3
+#define WINDOW_SIZE 2    
+#define LOSS_PROB 20 
 
 int sender = 0;
 int receiver = 0;
@@ -44,12 +44,12 @@ void Transmit() {
         }
         sleep(0.5); 
     }
-    printf("\nAll %d frames transmitted successfully with Go-Back-N.\n", TOTAL_FRAMES);
+    printf("\nAll frames transmitted successfully\n");
 }
 
 int main() {
     srand(time(NULL));
-    printf("Go-Back-N Sliding Window Protocol Simulation\n");
+    printf("Go-Back-N Sliding Window Protocol\n");
     printf("Total Frames: %d | Window Size: %d | Loss Probability: %d%%\n\n",
            TOTAL_FRAMES, WINDOW_SIZE, LOSS_PROB);
 
