@@ -24,7 +24,7 @@ void printRoutingTables(int dist[N][N], int nextHop[N][N]) {
 
 int main() {
     int graph[N][N] = {
-        {0, 1, INF, 4},
+        {0, 1, INF, INF},
         {1, 0, 2, INF},
         {INF, 2, 0, 3},
         {4, INF, 3, 0}

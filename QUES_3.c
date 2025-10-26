@@ -41,9 +41,9 @@ void Transmit() {
             }
         }
 
-        // sleep(500000); // 0.5 sec delay
+        sleep(1); // 1 sec delay
     }
-
+    printf("Receiver : %d",receiver);
     printf("\nAll frames transmitted successfully!\n");
 }
 
