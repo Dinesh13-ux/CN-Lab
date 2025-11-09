@@ -3,13 +3,13 @@
 #include <time.h>
 #include <unistd.h>
 
-#define TOTAL_FRAMES 7
+#define TOTAL_FRAMES 5
 #define WINDOW_SIZE 3
 #define LOSS_PROB 20
 
 int sender = 0;
 int receiver = 0;
-
+int flag = 0;
 int isLost() {
     return (rand() % 100) < LOSS_PROB;
 }
@@ -27,14 +27,24 @@ void Transmit() {
                 printf("Timeout! Resending from Frame %d\n", sender);
                 break;
             } else {
-                printf("Receiver: Frame %d received correctly\n", i);
-                receiver = i + 1;
+                if (flag == 1){
+                    printf("Receiver: Duplicate Frame %d received, Discarding Frame\n", i);
+                    receiver = i + 1;
+                   
+                }else {
+                    printf("Receiver: Frame %d received correctly\n", i);
+                    receiver = i + 1;
+                }
+                
+                
 
                 if (isLost()) {
                     printf("ACK %d lost!\n", receiver);
-                    printf("Resending from Frame %d\n", sender);
+                    printf("Timeout! Resending from Frame %d\n", sender);
+                    flag = 1;
                     break;
                 } else {
+                    flag = 0;
                     printf("Sender: ACK %d received\n", receiver);
                     sender = receiver; // slide the window
                 }
