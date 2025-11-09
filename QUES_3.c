@@ -7,8 +7,8 @@
 #define Frames 5
 #define loss_prob 20
 
-int sender = 0;
-int receiver = 0;
+int base = 0;
+int nextseqnum = 0;
 
 
 bool is_lost(int frame){
@@ -21,7 +21,7 @@ void send_frame(int frame){
 
 void resend_window(){
     printf("Resending Window...\n");
-    for(int i=sender;i<receiver;i++){
+    for(int i=base;i<nextseqnum;i++){
         send_frame(i);
     }
 }
@@ -30,20 +30,20 @@ int main(){
 
 srand(time(NULL));
 
-while(sender<Frames){
+while(base<Frames){
 
-    while(receiver<sender+W_SIZE && receiver<Frames){
-        send_frame(receiver);
-        receiver++;
+    while(nextseqnum<base+W_SIZE && nextseqnum<Frames){
+        send_frame(nextseqnum);
+        nextseqnum++;
     }
-    for(int i=sender;i<receiver;i++){
+    for(int i=base;i<nextseqnum;i++){
         if(is_lost(i)){
             printf("Error : Frame %d or ACK of %d lost!!\n",i,i);
             resend_window();
             break;
         }else{
             printf("ACK recieved for frame %d\n",i);
-            sender++;
+            base++;
         }
     }
 }
