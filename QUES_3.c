@@ -19,7 +19,6 @@ void printWindow() {
     printf("Sender Window: [");
     for (int i = sender; i < sender + WINDOW_SIZE && i < TOTAL_FRAMES; i++) {
         printf(" %d ", i);
-        
     }
     printf("]\n");
 }
