@@ -3,57 +3,67 @@
 #include <time.h>
 #include <unistd.h>
 
-#define TOTAL_FRAMES 5
+#define TOTAL_FRAMES 7
 #define WINDOW_SIZE 3
-#define LOSS_PROB 20
+#define LOSS_PROB 20 // % chance of loss
 
-int sender = 0;
+int sender = 0; // first frame in the window
+int next_frame_to_send = 0;
 int receiver = 0;
-int flag = 0;
+
 int isLost() {
     return (rand() % 100) < LOSS_PROB;
 }
 
+void printWindow() {
+    printf("Sender Window: [");
+    for (int i = sender; i < sender + WINDOW_SIZE && i < TOTAL_FRAMES; i++) {
+        printf("%d", i);
+        if (i < sender + WINDOW_SIZE - 1 && i < TOTAL_FRAMES - 1) printf(", ");
+    }
+    printf("]\n");
+}
+
 void Transmit() {
     while (sender < TOTAL_FRAMES) {
-        printf("\n--- Sending Window ---\n");
+        printf("\n--- Transmission Round ---\n");
+        printWindow();
 
-        int window_end = sender + WINDOW_SIZE;
-        for (int i = sender; i < window_end && i < TOTAL_FRAMES; i++) {
-            printf("Sender: Sending Frame %d\n", i);
 
+        int frame_lost = -1;
+        for (int i = sender; i < sender + WINDOW_SIZE && i < TOTAL_FRAMES; i++) {
             if (isLost()) {
-                printf("Frame %d lost during transmission!\n", i);
-                printf("Timeout! Resending from Frame %d\n", sender);
+                printf("Receiver: Frame %d lost!\n", i);
+                frame_lost = i;
                 break;
             } else {
-                if (flag == 1){
-                    printf("Receiver: Duplicate Frame %d received, Discarding Frame\n", i);
-                    receiver = i + 1;
-                   
-                }else {
-                    printf("Receiver: Frame %d received correctly\n", i);
-                    receiver = i + 1;
-                }
-                
-                
-
-                if (isLost()) {
-                    printf("ACK %d lost!\n", receiver);
-                    printf("Timeout! Resending from Frame %d\n", sender);
-                    flag = 1;
-                    break;
-                } else {
-                    flag = 0;
-                    printf("Sender: ACK %d received\n", receiver);
-                    sender = receiver; // slide the window
-                }
+                printf("Receiver: Frame %d received correctly\n", i);
+                receiver = i + 1;
             }
         }
 
-        sleep(1); // 1 sec delay
+        // ACK handling
+        if (frame_lost != -1) {
+            printf("Receiver: Cannot send ACK (Frame %d lost)\n", frame_lost);
+            printf("Timeout! Sender resending from Frame %d\n", sender);
+            sleep(1);
+            continue; 
+        } else {
+            // Simulate ACK loss
+            if (isLost()) {
+                printf("ACK for Frame %d lost!\n", receiver - 1);
+                printf("Timeout! Sender resending from Frame %d\n", sender);
+                sleep(1);
+                continue;
+            } else {
+                printf("Sender: ACK %d received\n", receiver);
+                sender = receiver; // Slide the window
+            }
+        }
+
+        sleep(1); // Simulate delay
     }
-    printf("Receiver : %d",receiver);
+
     printf("\nAll frames transmitted successfully!\n");
 }
 
