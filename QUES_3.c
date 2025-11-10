@@ -11,7 +11,7 @@ int base = 0;
 int nextseqnum = 0;
 
 
-bool is_lost(int frame){
+bool is_lost(){
     return (rand() % 100 <  loss_prob);
 }
 
@@ -37,7 +37,7 @@ while(base<Frames){
         nextseqnum++;
     }
     for(int i=base;i<nextseqnum;i++){
-        if(is_lost(i)){
+        if(is_lost()){
             printf("Error : Frame %d or ACK of %d lost!!\n",i,i);
             resend_window();
             break;

@@ -32,7 +32,7 @@ void compute_crc(const char* msg, const char* poly, int isSender) {
 
     char data[200], remainder[50];
     strcpy(data, msg);
-    memset(data + msg_len, '0', poly_len - 1);
+    memset(data + msg_len, '0', poly_len-1);
     data[total_len] = '\0';
 
     compute_remainder(data, poly, remainder);
