@@ -37,20 +37,17 @@ int main() {
     int offset = 0;
     int remaining = data_size;
 
-    int frag_offsets[num_frags];
     int frag_sizes[num_frags];
-    int MF_flags[num_frags];
 
     for (int i = 0; i < num_frags; i++) {
         int len = (remaining > frag_data_size) ? frag_data_size : remaining;
         int MF = (i == num_frags - 1) ? 0 : 1;       // More Fragments flag
         int total_frag_size = len + HEADER_SIZE;      // Header + data
 
-        frag_offsets[i] = offset / 8;  // Convert to 8-byte unit
         frag_sizes[i] = total_frag_size;
-        MF_flags[i] = MF;
 
-        printf("%d\t%d\t\t%d\t\t%d\n", i + 1, frag_offsets[i], total_frag_size, MF);
+
+        printf("%d\t%d\t\t%d\t\t%d\n", i + 1, offset/8, total_frag_size, MF);
 
         offset += len;
         remaining -= len;
